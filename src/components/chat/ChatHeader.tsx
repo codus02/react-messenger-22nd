@@ -25,9 +25,9 @@ export default function ChatHeader({ title, memberCount = 65, onBack }: Props) {
 
       {/* 우측: 검색 / 통화 / 메뉴 */}
       <div className="absolute right-3 flex items-center gap-3">
-        <Icon name="search" className="h-5 w-5" />
-        <Icon name="call" className="h-5 w-5" />
-        <Icon name="burger" className="h-5 w-5" />
+        <Icon name="search" className="h-6 w-6" />
+        <Icon name="call" className="h-6 w-6" />
+        <Icon name="burger" className="h-6 w-6" />
       </div>
     </header>
   );

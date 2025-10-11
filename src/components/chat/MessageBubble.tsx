@@ -25,15 +25,15 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time 
     <div className={`mb-2 flex gap-2 ${isMine ? 'items-end justify-end' : 'items-start justify-start'}`}>
       {/* 상대 메시지일 때만 아바타(둥근 사각) */}
       {!isMine && (
-        <div className="h-8 w-8 shrink-0 self-start">
+        <div className="h-9 w-9 shrink-0 self-start">
           {showAvatar ? (
             user?.avatarUrl ? (
               <img src={user.avatarUrl} alt={user?.name ?? 'user'} className="h-8 w-8 rounded-[12px] object-cover" />
             ) : (
-              <div className="h-8 w-8 rounded-[12px] bg-[var(--gray-300)]" />
+              <div className="h-9 w-9 rounded-[12px] bg-[var(--gray-300)]" />
             )
           ) : (
-            <div className="h-8 w-8" />
+            <div className="h-9 w-9" />
           )}
         </div>
       )}

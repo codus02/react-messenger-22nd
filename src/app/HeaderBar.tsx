@@ -19,9 +19,9 @@ export default function HeaderBar({ title }: { title: string }) {
       </div>
 
       <div className="flex items-center gap-4">
-        <Icon name="search" className="h-5 w-5" />
-        <Icon name="call" className="h-5 w-5" />
-        <Icon name="burger" className="h-5 w-5" />
+        <Icon name="search" className="h-6 w-6" />
+        <Icon name="call" className="h-6 w-6" />
+        <Icon name="burger" className="h-6 w-6" />
       </div>
     </div>
   );

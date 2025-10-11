@@ -21,13 +21,13 @@ export default function ChatRoom() {
       <header className="flex h-12 items-center justify-between border-b px-3">
         <div className="flex items-center gap-2">
           <button onClick={() => nav(-1)}>
-            <Icon name="chevron-left" className="h-5 w-5" />
+            <Icon name="chevron-left" className="h-6 w-6" />
           </button>
           <h1 className="text-title-2">{title}</h1>
         </div>
         <div className="flex items-center gap-3">
-          <Icon name="search" className="h-5 w-5" />
-          <Icon name="burger" className="h-5 w-5" />
+          <Icon name="search" className="h-6 w-6" />
+          <Icon name="burger" className="h-6 w-6" />
         </div>
       </header>
 
