@@ -9,7 +9,7 @@ type Props = {
 
 export default React.memo(function MessageItem({ message, user, isMe }: Props) {
   return (
-    <li className={`flex items-end gap-2 ${isMe ? 'justify-end' : 'justify-start'}`}>
+    <li className={`flex items-end gap-3 ${isMe ? 'justify-end' : 'justify-start'}`}>
       {/* 상대 메시지일 때만 아바타 표시 */}
       {!isMe && (
         <img

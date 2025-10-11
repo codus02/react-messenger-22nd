@@ -14,7 +14,8 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time 
       <span
         className={[
           'text-caption-medium leading-none text-[color:var(--gray-500)]',
-          side === 'left' ? 'self-end pr-1' : 'self-end pl-1',
+          // 시간 텍스트의 좌우 여백 (필요 시 조정)
+          side === 'left' ? 'self-end pr-0' : 'self-end pl-0',
         ].join(' ')}
       >
         {time}
@@ -22,13 +23,14 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time 
     ) : null;
 
   return (
-    <div className={`mb-2 flex gap-2 ${isMine ? 'items-end justify-end' : 'items-start justify-start'}`}>
+    // 채팅 말풍선과 시간 사이 간격: 4px (gap-1)
+    <div className={`mb-2 flex gap-1 ${isMine ? 'items-end justify-end' : 'items-start justify-start'}`}>
       {/* 상대 메시지일 때만 아바타(둥근 사각) */}
       {!isMine && (
         <div className="h-9 w-9 shrink-0 self-start">
           {showAvatar ? (
             user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user?.name ?? 'user'} className="h-8 w-8 rounded-[12px] object-cover" />
+              <img src={user.avatarUrl} alt={user?.name ?? 'user'} className="h-9 w-9 rounded-[12px] object-cover" />
             ) : (
               <div className="h-9 w-9 rounded-[12px] bg-[var(--gray-300)]" />
             )
@@ -46,7 +48,9 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time 
         {!isMine && showAvatar && (
           <div className="text-body2-medium mb-1 pl-1 text-[color:var(--gray-800)]">{user?.name ?? ''}</div>
         )}
-        <div className="text-body2-medium rounded-[12px] bg-[var(--white)] px-4 py-3 break-words break-all whitespace-pre-wrap text-[color:var(--gray-800)]">
+
+        {/* ⬇️ 내부 패딩을 모두 12px로 통일: px-4 → px-3, py-3 그대로 */}
+        <div className="text-body2-medium rounded-[12px] bg-[var(--white)] px-3 py-3 break-words break-all whitespace-pre-wrap text-[color:var(--gray-800)]">
           {message.text}
         </div>
       </div>
