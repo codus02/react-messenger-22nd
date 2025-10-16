@@ -43,14 +43,15 @@ export default function MessageList({ messages, usersById, meId }: Props) {
   }, [messages.length]);
 
   return (
-    <div className="flex h-full flex-col overflow-y-auto p-3">
+    <div className="no-scrollbar flex h-full flex-col overflow-y-auto p-3">
+      {/* ↑ no-scrollbar 클래스 추가 */}
       {sections.map(([day, list]) => {
         const hasValidMessages = list.some((m) => m.text);
         if (!hasValidMessages) return null;
 
         return (
           <section key={day} className="flex flex-col">
-            <div className="my-1 flex justify-center">
+            <div className="mt-4 mb-1 flex justify-center">
               <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
                 {new Date(day).toLocaleDateString('ko-KR', {
                   year: 'numeric',
@@ -72,16 +73,12 @@ export default function MessageList({ messages, usersById, meId }: Props) {
               const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
               const user = usersById[m.userId];
 
-              // 간격 계산: 첫 메시지, 다른 사용자, 같은 사용자 구분
               let spacing: 'first' | 'different-user' | 'same-user';
               if (!prev || !prev.text) {
-                // 섹션의 첫 메시지 (또는 이전이 빈 메시지)
                 spacing = 'first';
               } else if (prev.userId !== m.userId) {
-                // 이전 메시지와 다른 사용자
                 spacing = 'different-user';
               } else {
-                // 같은 사용자
                 spacing = 'same-user';
               }
 
