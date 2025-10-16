@@ -43,14 +43,13 @@ export default function MessageList({ messages, usersById, meId }: Props) {
   }, [messages.length]);
 
   return (
-    <div className="flex h-full flex-col gap-2 overflow-y-auto p-3">
+    <div className="flex h-full flex-col overflow-y-auto p-3">
       {sections.map(([day, list]) => {
-        // 빈 메시지만 있는 섹션은 건너뛰기 ← 추가!
         const hasValidMessages = list.some((m) => m.text);
         if (!hasValidMessages) return null;
 
         return (
-          <section key={day} className="flex flex-col gap-2">
+          <section key={day} className="flex flex-col">
             <div className="my-1 flex justify-center">
               <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
                 {new Date(day).toLocaleDateString('ko-KR', {
@@ -73,6 +72,19 @@ export default function MessageList({ messages, usersById, meId }: Props) {
               const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
               const user = usersById[m.userId];
 
+              // 간격 계산: 첫 메시지, 다른 사용자, 같은 사용자 구분
+              let spacing: 'first' | 'different-user' | 'same-user';
+              if (!prev || !prev.text) {
+                // 섹션의 첫 메시지 (또는 이전이 빈 메시지)
+                spacing = 'first';
+              } else if (prev.userId !== m.userId) {
+                // 이전 메시지와 다른 사용자
+                spacing = 'different-user';
+              } else {
+                // 같은 사용자
+                spacing = 'same-user';
+              }
+
               return (
                 <MessageBubble
                   key={m.id}
@@ -81,6 +93,7 @@ export default function MessageList({ messages, usersById, meId }: Props) {
                   user={user}
                   showAvatar={showAvatar}
                   time={showTime ? hm(m.createdAt) : undefined}
+                  spacing={spacing}
                 />
               );
             })}
