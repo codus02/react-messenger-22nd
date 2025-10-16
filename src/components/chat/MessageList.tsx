@@ -44,41 +44,49 @@ export default function MessageList({ messages, usersById, meId }: Props) {
 
   return (
     <div className="flex h-full flex-col gap-2 overflow-y-auto p-3">
-      {sections.map(([day, list]) => (
-        <section key={day} className="flex flex-col gap-2">
-          <div className="my-1 flex justify-center">
-            <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
-              {new Date(day).toLocaleDateString('ko-KR', {
-                year: 'numeric',
-                month: 'long',
-                day: 'numeric',
-                weekday: 'short',
-              })}
-            </span>
-          </div>
+      {sections.map(([day, list]) => {
+        // 빈 메시지만 있는 섹션은 건너뛰기 ← 추가!
+        const hasValidMessages = list.some((m) => m.text);
+        if (!hasValidMessages) return null;
 
-          {list.map((m, idx) => {
-            const isMine = m.userId === meId;
-            const prev = list[idx - 1];
-            const next = list[idx + 1];
+        return (
+          <section key={day} className="flex flex-col gap-2">
+            <div className="my-1 flex justify-center">
+              <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
+                {new Date(day).toLocaleDateString('ko-KR', {
+                  year: 'numeric',
+                  month: 'long',
+                  day: 'numeric',
+                  weekday: 'short',
+                })}
+              </span>
+            </div>
 
-            const showAvatar = !isMine && (!prev || prev.userId !== m.userId);
-            const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
-            const user = usersById[m.userId];
+            {list.map((m, idx) => {
+              if (!m.text) return null;
 
-            return (
-              <MessageBubble
-                key={m.id}
-                message={m}
-                isMine={isMine}
-                user={user}
-                showAvatar={showAvatar}
-                time={showTime ? hm(m.createdAt) : undefined}
-              />
-            );
-          })}
-        </section>
-      ))}
+              const isMine = m.userId === meId;
+              const prev = list[idx - 1];
+              const next = list[idx + 1];
+
+              const showAvatar = !isMine && (!prev || prev.userId !== m.userId);
+              const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
+              const user = usersById[m.userId];
+
+              return (
+                <MessageBubble
+                  key={m.id}
+                  message={m}
+                  isMine={isMine}
+                  user={user}
+                  showAvatar={showAvatar}
+                  time={showTime ? hm(m.createdAt) : undefined}
+                />
+              );
+            })}
+          </section>
+        );
+      })}
       <div ref={endRef} />
     </div>
   );
