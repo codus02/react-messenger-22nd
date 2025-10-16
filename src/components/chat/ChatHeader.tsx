@@ -17,7 +17,6 @@ export default function ChatHeader({ title, memberCount = 65, onBack }: Props) {
 
       {/* 중앙: 방 아이콘 + 타이틀 + 인원수 */}
       <div className="pointer-events-none mx-auto flex items-center gap-2">
-        {/* 시안의 작은 사각형 아이콘 (보유 아이콘 중 'vector' 사용) */}
         <Icon name="vector" className="h-3 w-3" />
         <h1 className="text-title-2">{title}</h1>
         <span className="text-body2-regular text-[color:var(--gray-700)]">{memberCount}</span>

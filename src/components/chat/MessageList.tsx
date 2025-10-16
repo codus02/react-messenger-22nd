@@ -9,7 +9,7 @@ type Props = {
 };
 
 function ymd(iso: string) {
-  return iso.slice(0, 10); // YYYY-MM-DD
+  return iso.slice(0, 10);
 }
 function hm(iso: string) {
   const d = new Date(iso);
@@ -46,7 +46,6 @@ export default function MessageList({ messages, usersById, meId }: Props) {
     <div className="flex h-full flex-col gap-2 overflow-y-auto p-3">
       {sections.map(([day, list]) => (
         <section key={day} className="flex flex-col gap-2">
-          {/* 날짜칩: Caption_M_12 */}
           <div className="my-1 flex justify-center">
             <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
               {new Date(day).toLocaleDateString('ko-KR', {
@@ -64,8 +63,6 @@ export default function MessageList({ messages, usersById, meId }: Props) {
             const next = list[idx + 1];
 
             const showAvatar = !isMine && (!prev || prev.userId !== m.userId);
-
-            // 같은 '분' 구간의 마지막 말풍선에만 시간 표시
             const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
             const user = usersById[m.userId];
 

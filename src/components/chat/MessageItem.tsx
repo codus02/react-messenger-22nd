@@ -15,7 +15,7 @@ export default React.memo(function MessageItem({ message, user, isMe }: Props) {
         <img
           src={user.avatarUrl || '/avatars/user.png'}
           alt={user.name}
-          className="h-8 w-8 shrink-0 rounded-full object-cover"
+          className="h-9 w-9 shrink-0 rounded-full object-cover"
         />
       )}
 
