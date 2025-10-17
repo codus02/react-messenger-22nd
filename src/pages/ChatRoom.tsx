@@ -1,9 +1,10 @@
+// src/pages/ChatRoom.tsx
 import { useState, useEffect, useMemo } from 'react';
 import StatusBar from '@/app/StatusBar';
 import HeaderBar from '@/app/HeaderBar';
 import MessageList from '@/components/chat/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
-import BottomIndicator from '@/app/BottomIndicator';
+// import BottomIndicator from '@/app/BottomIndicator'; ← 이 줄 제거!
 import { useLocalMessages, type TextMessage } from '@/features/chat/hooks/useLocalMessages';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { User } from '@/types/chat';
@@ -14,8 +15,8 @@ import cceosUrl from '@/icons/cceos.svg';
 const ME_ID = 'me';
 const CHAT_ID = 'c_ceos';
 
-// 전체 SEED 데이터
 const SEED: TextMessage[] = [
+  // ... SEED 데이터 동일
   {
     id: 'm1',
     kind: 'text',
@@ -78,7 +79,6 @@ export default function ChatRoom() {
   const nav = useNavigate();
   const { messages, sendText } = useLocalMessages(chatId || CHAT_ID, ME_ID, SEED);
 
-  // 날짜 변경 감지
   const [currentDate, setCurrentDate] = useState(() => new Date().toISOString().slice(0, 10));
 
   useEffect(() => {
@@ -118,7 +118,7 @@ export default function ChatRoom() {
         <MessageList messages={messagesWithToday} usersById={usersById} meId={ME_ID} />
       </div>
       <ChatInput onSend={sendText} />
-      <BottomIndicator />
+      {/* BottomIndicator 제거! MobileFrame에서 자동으로 추가됨 */}
     </>
   );
 }

@@ -11,12 +11,15 @@ export default function ChatInput({ onSend }: Props) {
   const taRef = useRef<HTMLTextAreaElement>(null);
 
   // 스펙
-  const BAR_MIN = 56; // 바 최소 높이
-  const W_EMPTY = 199; // 입력 전 너비(콘텐츠 폭)
-  const W_TYPED = 271; // 입력 시작 후 너비(콘텐츠 폭)
-  const ONE_H = 40; // 1줄 높이
-  const TWO_H = 60; // 2줄 높이(최대)
-  const H_PADX = 32; // 버블 좌우 padding 16+16 (px)
+  const BAR_MIN = 56; // 바 최소 높이 (1줄: 40 + 상하 패딩 8*2)
+  const W_EMPTY = 167; // 입력 전 텍스트 영역 가로
+  const W_TYPED = 239; // 입력 후 텍스트 영역 가로
+  const ONE_H = 40; // 1줄 입력칸 높이
+  const TWO_H = 60; // 2줄 입력칸 높이
+  const BAR_PADY = 8; // 바 전체의 상하 패딩
+  const H_PADX = 32; // 버블 좌우 padding 16+16
+  const ONE_PADY = 4; // 1줄 입력칸 내부 상하 padding
+  const TWO_PADY = 8; // 2줄 입력칸 내부 상하 padding
 
   const [boxH, setBoxH] = useState<number>(ONE_H);
   const hasText = value.trim().length > 0;
@@ -25,37 +28,35 @@ export default function ChatInput({ onSend }: Props) {
     const el = taRef.current;
     if (!el) return;
 
-    // 1) 현재 상태(199/271)에 맞춰 측정용 너비를 먼저 반영
     const measureWidth = hasText ? W_TYPED : W_EMPTY;
     el.style.width = `${measureWidth}px`;
 
-    // 2) 높이 초기화 후 실측
     el.style.height = 'auto';
 
-    // 3) 1줄 임계값(라인하이트+패딩+보더)에 여유치(EPS) 포함
     const cs = window.getComputedStyle(el);
-    const lineH = parseFloat(cs.lineHeight) || 20; // leading-5 기준 약 20px
+    const lineH = parseFloat(cs.lineHeight) || 20;
     const padV = (parseFloat(cs.paddingTop) || 0) + (parseFloat(cs.paddingBottom) || 0);
     const borderV = (parseFloat(cs.borderTopWidth) || 0) + (parseFloat(cs.borderBottomWidth) || 0);
-    const EPS = 6; // 폰트/브라우저 오차 여유
+    const EPS = 6;
     const oneLineThreshold = lineH + padV + borderV + EPS;
 
     const contentH = el.scrollHeight;
 
-    // 4) 실제로 줄바꿈이 생겼을 때만 60으로 확대
+    // 1줄: 32px 텍스트 영역, 2줄: 44px 텍스트 영역 (60 - 8 - 8)
     const target = contentH > oneLineThreshold ? TWO_H : ONE_H;
     setBoxH(target);
 
-    // 5) textarea 자체 높이/최대높이 + 스크롤 처리
-    el.style.height = `${Math.min(contentH, TWO_H)}px`;
-    el.style.maxHeight = `${TWO_H}px`;
-    el.style.overflowY = contentH > TWO_H ? 'auto' : 'hidden';
+    // textarea 최대 높이 제한
+    const maxTextAreaHeight = target === TWO_H ? 44 : 32;
+    el.style.height = `${Math.min(contentH, maxTextAreaHeight)}px`;
+    el.style.maxHeight = `${maxTextAreaHeight}px`;
+    el.style.overflowY = contentH > maxTextAreaHeight ? 'auto' : 'hidden';
   };
 
   useEffect(() => {
     autoResize();
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [value]); // hasText는 value 변화에 종속
+  }, [value]);
 
   const send = useCallback(async () => {
     const text = value.trim();
@@ -73,12 +74,21 @@ export default function ChatInput({ onSend }: Props) {
     }
   };
 
+  // 현재 줄 수에 따른 패딩 계산
+  const currentPadY = boxH === TWO_H ? TWO_PADY : ONE_PADY;
+
   return (
     <div
-      className="flex items-center gap-3 bg-[var(--white)] px-3"
-      style={{ minHeight: BAR_MIN, height: Math.max(BAR_MIN, boxH) }}
+      className="flex items-center bg-[var(--white)] px-4"
+      style={{
+        minHeight: BAR_MIN,
+        height: boxH + BAR_PADY * 2, // 입력칸 높이 + 위아래 패딩 8px씩
+        gap: '12px',
+        paddingTop: `${BAR_PADY}px`,
+        paddingBottom: `${BAR_PADY}px`,
+      }}
     >
-      {/* 좌측 아이콘: 텍스트 유무에 따라 토글 */}
+      {/* 좌측 아이콘들 */}
       {!hasText ? (
         <>
           <button type="button" className="grid h-6 w-6 place-items-center" aria-label="추가">
@@ -97,15 +107,19 @@ export default function ChatInput({ onSend }: Props) {
         </button>
       )}
 
-      {/* 입력칸: 199×40 → (입력 후) 271×40 → (줄바꿈) 271×60 */}
+      {/* 입력칸 */}
       <div className="flex flex-1 justify-center">
         <div
-          className="rounded-full bg-[var(--gray-100)] px-4"
+          className="rounded-full bg-[var(--gray-100)]"
           style={{
-            width: (hasText ? W_TYPED : W_EMPTY) + H_PADX, // 콘텐츠폭 + 좌우 패딩
+            width: (hasText ? W_TYPED : W_EMPTY) + H_PADX,
             height: boxH,
             display: 'flex',
             alignItems: 'center',
+            paddingLeft: '16px',
+            paddingRight: '16px',
+            paddingTop: `${currentPadY}px`,
+            paddingBottom: `${currentPadY}px`,
             transition: 'width 120ms ease, height 120ms ease',
           }}
         >
@@ -128,18 +142,22 @@ export default function ChatInput({ onSend }: Props) {
               'text-[color:var(--gray-800)]',
               'placeholder-[color:var(--gray-400)]',
               'outline-none',
-              'p-0', // 높이계산 정확도 ↑
-              'box-border', // 테두리 포함 박스모델
+              'p-0',
+              'box-border',
             ].join(' ')}
-            // 초기 렌더에서도 정확한 측정을 위해 width를 style로 지정
             style={{ width: hasText ? W_TYPED : W_EMPTY }}
           />
         </div>
       </div>
 
-      {/* 우측 아이콘: 텍스트 없으면 voice, 있으면 send */}
+      {/* 우측 아이콘 */}
       {hasText ? (
-        <button type="button" onClick={() => void send()} className="grid h-6 w-6 place-items-center" aria-label="전송">
+        <button
+          type="button"
+          onClick={() => void send()}
+          className="grid h-6 w-6 cursor-pointer place-items-center"
+          aria-label="전송"
+        >
           <Icon name="send" className="h-6 w-6" alt="전송" />
         </button>
       ) : (
