@@ -4,15 +4,14 @@ import NowClock from '@/components/NowClock';
 
 export default function StatusBar() {
   return (
-    <div className="] flex h-[47px] w-full items-center">
+    <div className="flex h-[47px] w-full items-center bg-[var(--white)]">
+      {/* ↑ bg-[var(--white)] 추가 */}
       {/* 좌측 시계: 88x47 박스 내 우측 정렬 (글자 17px) */}
       <div className="flex h-[47px] w-[88px] items-center justify-end pr-3">
         <NowClock
           refreshMs={30_000}
           className="text-[17px] leading-[17px] font-medium"
-          format={
-            (d) => d.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' }) // HH:MM
-          }
+          format={(d) => d.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' })}
         />
       </div>
 

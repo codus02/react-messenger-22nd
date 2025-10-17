@@ -1,3 +1,4 @@
+// src/components/chat/MessageList.tsx
 import { useEffect, useMemo, useRef } from 'react';
 import type { TextMessage, User } from '@/types/chat';
 import MessageBubble from './MessageBubble';
@@ -43,15 +44,18 @@ export default function MessageList({ messages, usersById, meId }: Props) {
   }, [messages.length]);
 
   return (
-    <div className="no-scrollbar flex h-full flex-col overflow-y-auto p-3">
-      {/* ↑ no-scrollbar 클래스 추가 */}
-      {sections.map(([day, list]) => {
+    <div className="no-scrollbar flex h-full flex-col overflow-y-auto px-3 pt-4 pb-3">
+      {/* ↑ p-3 → px-3 pb-3 pt-4 변경 (상단 16px) */}
+      {sections.map(([day, list], sectionIdx) => {
         const hasValidMessages = list.some((m) => m.text);
         if (!hasValidMessages) return null;
 
+        const isFirstSection = sectionIdx === 0;
+
         return (
           <section key={day} className="flex flex-col">
-            <div className="mt-4 mb-1 flex justify-center">
+            <div className={`mb-1 flex justify-center ${isFirstSection ? '' : 'mt-4'}`}>
+              {/* ↑ 첫 섹션은 mt 없음, 나머지는 mt-4, mb는 mb-1로 변경 */}
               <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
                 {new Date(day).toLocaleDateString('ko-KR', {
                   year: 'numeric',

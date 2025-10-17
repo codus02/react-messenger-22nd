@@ -2,19 +2,14 @@
 import { Icon } from '@/components/Icon';
 import { useNavigate } from 'react-router-dom';
 
-export default function HeaderBar({
-  title,
-  onBack,
-}: {
-  title: string;
-  onBack?: () => void; // ← 추가
-}) {
+export default function HeaderBar({ title, onBack }: { title: string; onBack?: () => void }) {
   const nav = useNavigate();
 
   return (
     <div className="flex h-[47px] w-full items-center justify-between bg-[var(--white)] px-4">
       <div className="flex items-center gap-3">
-        <button onClick={onBack || (() => nav(-1))} aria-label="뒤로가기">
+        <button onClick={onBack || (() => nav(-1))} aria-label="뒤로가기" className="cursor-pointer">
+          {/* ↑ cursor-pointer 추가 */}
           <Icon name="stroke-1" className="h-5 w-5" />
         </button>
 
