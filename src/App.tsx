@@ -1,6 +1,10 @@
-import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
-import ChatRoom from '@/pages/ChatRoom'; // ← 추가
-import Chats from '@/pages/Chats'; // ← 추가
+// src/App.tsx
+import { BrowserRouter, Routes, Route } from 'react-router-dom';
+import Home from '@/pages/Home';
+import Chats from '@/pages/Chats';
+import Call from '@/pages/Call';
+import More from '@/pages/More';
+import ChatRoom from '@/pages/ChatRoom';
 import MobileFrame from '@/layouts/MobileFrame';
 import ErrorBoundary from '@/components/dev/ErrorBoundary';
 
@@ -9,15 +13,42 @@ export default function App() {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          {/* 홈은 채팅 목록으로 */}
-          <Route path="/" element={<Navigate to="/chats" replace />} />
+          {/* 홈 */}
+          <Route
+            path="/"
+            element={
+              <MobileFrame>
+                <Home />
+              </MobileFrame>
+            }
+          />
 
-          {/* 채팅 목록 페이지 */}
+          {/* 채팅 목록 */}
           <Route
             path="/chats"
             element={
               <MobileFrame>
                 <Chats />
+              </MobileFrame>
+            }
+          />
+
+          {/* 전화 */}
+          <Route
+            path="/call"
+            element={
+              <MobileFrame>
+                <Call />
+              </MobileFrame>
+            }
+          />
+
+          {/* 더보기 */}
+          <Route
+            path="/more"
+            element={
+              <MobileFrame>
+                <More />
               </MobileFrame>
             }
           />
