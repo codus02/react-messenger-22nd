@@ -1,5 +1,5 @@
 // src/components/chat/MessageList.tsx
-import { useEffect, useMemo, useRef } from 'react';
+import { useEffect, useMemo, useRef, useState } from 'react';
 import type { TextMessage, User } from '@/types/chat';
 import MessageBubble from './MessageBubble';
 
@@ -25,19 +25,47 @@ function minuteKey(iso: string) {
 
 export default function MessageList({ messages, usersById, meId }: Props) {
   const endRef = useRef<HTMLDivElement>(null);
+  const [currentDate, setCurrentDate] = useState(() => ymd(new Date().toISOString()));
+
+  // 날짜 변경 감지
+  useEffect(() => {
+    const checkDate = () => {
+      const newDate = ymd(new Date().toISOString());
+      if (newDate !== currentDate) {
+        setCurrentDate(newDate);
+      }
+    };
+    const interval = setInterval(checkDate, 30_000); // 30초마다 체크
+    return () => clearInterval(interval);
+  }, [currentDate]);
 
   const sections = useMemo(() => {
     const byDay = new Map<string, TextMessage[]>();
+
+    // 기존 메시지들 그룹화
     for (const m of messages) {
       const k = ymd(m.createdAt);
       if (!byDay.has(k)) byDay.set(k, []);
       byDay.get(k)!.push(m);
     }
+
+    // 마지막 메시지 날짜와 현재 날짜가 다르면 빈 섹션 추가
+    if (messages.length > 0) {
+      const lastMessage = messages[messages.length - 1];
+      const lastDate = ymd(lastMessage.createdAt);
+
+      if (lastDate < currentDate && !byDay.has(currentDate)) {
+        byDay.set(currentDate, []); // 빈 배열로 오늘 날짜 섹션 추가
+      }
+    }
+
+    // 정렬
     for (const [, list] of byDay) {
       list.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
     }
+
     return Array.from(byDay.entries()).sort(([a], [b]) => (a < b ? -1 : 1));
-  }, [messages]);
+  }, [messages, currentDate]);
 
   useEffect(() => {
     endRef.current?.scrollIntoView({ behavior: 'smooth', block: 'end' });
@@ -45,17 +73,13 @@ export default function MessageList({ messages, usersById, meId }: Props) {
 
   return (
     <div className="no-scrollbar flex h-full flex-col overflow-y-auto px-3 pt-4 pb-3">
-      {/* ↑ p-3 → px-3 pb-3 pt-4 변경 (상단 16px) */}
       {sections.map(([day, list], sectionIdx) => {
-        const hasValidMessages = list.some((m) => m.text);
-        if (!hasValidMessages) return null;
-
         const isFirstSection = sectionIdx === 0;
 
         return (
           <section key={day} className="flex flex-col">
+            {/* 날짜 표시 - 항상 표시 */}
             <div className={`mb-1 flex justify-center ${isFirstSection ? '' : 'mt-4'}`}>
-              {/* ↑ 첫 섹션은 mt 없음, 나머지는 mt-4, mb는 mb-1로 변경 */}
               <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
                 {new Date(day).toLocaleDateString('ko-KR', {
                   year: 'numeric',
@@ -66,6 +90,7 @@ export default function MessageList({ messages, usersById, meId }: Props) {
               </span>
             </div>
 
+            {/* 메시지 목록 */}
             {list.map((m, idx) => {
               if (!m.text) return null;
 
