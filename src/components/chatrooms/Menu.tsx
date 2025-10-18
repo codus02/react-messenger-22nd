@@ -1,5 +1,4 @@
 // src/components/chatrooms/Menu.tsx
-//import { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { Icon } from '@/components/Icon';
 
@@ -9,7 +8,6 @@ export default function Menu() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // 현재 경로에 따라 활성 메뉴 결정
   const getActiveMenu = (): MenuType => {
     if (location.pathname === '/') return 'home';
     if (location.pathname.startsWith('/chats')) return 'chat';
@@ -21,10 +19,34 @@ export default function Menu() {
   const activeMenu = getActiveMenu();
 
   const menus = [
-    { id: 'home' as MenuType, label: '홈', icon: 'home', path: '/' },
-    { id: 'chat' as MenuType, label: '대화', icon: 'chat', path: '/chats' },
-    { id: 'call' as MenuType, label: '전화', icon: 'call', path: '/call' },
-    { id: 'more' as MenuType, label: '더보기', icon: 'vector', path: '/more' },
+    {
+      id: 'home' as MenuType,
+      label: '홈',
+      icon: 'home',
+      iconActive: 'home-dark',
+      path: '/',
+    },
+    {
+      id: 'chat' as MenuType,
+      label: '대화',
+      icon: 'chat',
+      iconActive: 'chat-dark',
+      path: '/chats',
+    },
+    {
+      id: 'call' as MenuType,
+      label: '전화',
+      icon: 'call',
+      iconActive: 'call',
+      path: '/call',
+    },
+    {
+      id: 'more' as MenuType,
+      label: '더보기',
+      icon: 'vector',
+      iconActive: 'vector',
+      path: '/more',
+    },
   ];
 
   return (
@@ -38,9 +60,15 @@ export default function Menu() {
             onClick={() => navigate(menu.path)}
             className="flex w-[94px] cursor-pointer flex-col items-center justify-center gap-1 py-2"
           >
-            {/* 아이콘 */}
-            <div className={isActive ? 'opacity-100' : 'opacity-40'}>
-              <Icon name={menu.icon} className="h-6 w-6" />
+            {/* 아이콘 - 비활성일 때만 gray-400 */}
+            <div
+              style={{
+                filter: !isActive
+                  ? 'brightness(0) saturate(100%) invert(68%) sepia(6%) saturate(371%) hue-rotate(202deg) brightness(92%) contrast(85%)'
+                  : 'none',
+              }}
+            >
+              <Icon name={isActive ? menu.iconActive : menu.icon} className="h-6 w-6" />
             </div>
 
             {/* 텍스트 */}
