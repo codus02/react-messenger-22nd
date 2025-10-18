@@ -10,15 +10,15 @@ export default function Home() {
     <MenuTab>
       <Header />
       <div className="flex flex-col gap-1">
-        {/* gap-1 = 4px */}
         <MyProfile />
         <Friendsearch />
       </div>
+
       <div className="mt-6">
         <FriendList />
       </div>
 
-      <div className="flex-1 bg-[var(--gray-100)]">{/* 친구 목록 */}</div>
+      {/* flex-1 제거 - MenuTab이 배경 처리 */}
     </MenuTab>
   );
 }

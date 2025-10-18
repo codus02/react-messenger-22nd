@@ -1,10 +1,9 @@
 // src/pages/ChatRoom.tsx
-//import { useState, useEffect, useMemo } from 'react';
+import { useState, useEffect, useMemo } from 'react';
 import StatusBar from '@/app/StatusBar';
 import HeaderBar from '@/app/HeaderBar';
 import MessageList from '@/components/chat/MessageList';
 import ChatInput from '@/components/chat/ChatInput';
-// import BottomIndicator from '@/app/BottomIndicator'; ← 이 줄 제거!
 import { useLocalMessages, type TextMessage } from '@/features/chat/hooks/useLocalMessages';
 import { useParams, useNavigate } from 'react-router-dom';
 import type { User } from '@/types/chat';
@@ -16,7 +15,6 @@ const ME_ID = 'me';
 const CHAT_ID = 'c_ceos';
 
 const SEED: TextMessage[] = [
-  // ... SEED 데이터 동일
   {
     id: 'm1',
     kind: 'text',
@@ -79,14 +77,48 @@ export default function ChatRoom() {
   const nav = useNavigate();
   const { messages, sendText } = useLocalMessages(chatId || CHAT_ID, ME_ID, SEED);
 
+  const [currentDate, setCurrentDate] = useState(() => new Date().toISOString().slice(0, 10));
+
+  useEffect(() => {
+    const checkDate = () => {
+      const newDate = new Date().toISOString().slice(0, 10);
+      if (newDate !== currentDate) {
+        setCurrentDate(newDate);
+      }
+    };
+    const interval = setInterval(checkDate, 30_000);
+    return () => clearInterval(interval);
+  }, [currentDate]);
+
+  const messagesWithToday = useMemo(() => {
+    if (messages.length === 0) return messages;
+    const lastMessage = messages[messages.length - 1];
+    const lastDate = lastMessage.createdAt.slice(0, 10);
+    if (lastDate < currentDate) {
+      const dummyMessage: TextMessage = {
+        id: `date-${currentDate}`,
+        kind: 'text',
+        text: '',
+        userId: ME_ID,
+        chatId: chatId || CHAT_ID,
+        createdAt: new Date().toISOString(),
+      };
+      return [...messages, dummyMessage];
+    }
+    return messages;
+  }, [messages, currentDate, chatId]);
+
   return (
-    <>
+    <div className="flex h-full flex-col bg-[var(--white)]">
+      {/* 상태창 배경 흰색 */}
       <StatusBar />
       <HeaderBar title="CEOS 22기 잡담방" onBack={() => nav('/chats')} />
       <div className="min-h-0 flex-1 bg-[var(--green-100)]">
-        <MessageList messages={messages} usersById={usersById} meId={ME_ID} />
+        <MessageList messages={messagesWithToday} usersById={usersById} meId={ME_ID} />
       </div>
       <ChatInput onSend={sendText} />
-    </>
+      {/* 32px 간격 추가 */}
+      <div className="h-[32px] bg-[var(--white)]" />
+    </div>
   );
 }

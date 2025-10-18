@@ -1,27 +1,30 @@
 // src/app/StatusBar.tsx
 import { Icon } from '@/components/Icon';
-import NowClock from '@/components/NowClock';
 
-export default function StatusBar() {
+type Props = {
+  theme?: 'dark' | 'light';
+};
+
+export default function StatusBar({ theme = 'dark' }: Props) {
+  const textColor = theme === 'light' ? 'text-white' : 'text-black';
+
   return (
-    <div className="flex h-[47px] w-full items-center bg-[var(--white)]">
-      {/* ↑ bg-[var(--white)] 추가 */}
-      {/* 좌측 시계: 88x47 박스 내 우측 정렬 (글자 17px) */}
-      <div className="flex h-[47px] w-[88px] items-center justify-end pr-3">
-        <NowClock
-          refreshMs={30_000}
-          className="text-[17px] leading-[17px] font-medium"
-          format={(d) => d.toLocaleTimeString('ko-KR', { hour12: false, hour: '2-digit', minute: '2-digit' })}
-        />
-      </div>
+    <div className="flex h-11 items-center justify-between px-4">
+      {/* 왼쪽: 시간 */}
+      <span className={`text-[14px] font-semibold ${textColor}`}>
+        {new Date().toLocaleTimeString('ko-KR', { hour: '2-digit', minute: '2-digit', hour12: false })}
+      </span>
 
-      {/* 가운데 타이틀 */}
-      <div className="flex-1"></div>
-
-      {/* 우측 인디케이터 묶음: 위·아래·오른쪽 6.5px 여백, 실제 아이콘 77.3x13 */}
-      <div className="h-[47px] pr-[6.5px]">
-        <div className="grid h-full place-items-center p-[6.5px]">
-          <Icon name="indicators-group" className="h-[13px] w-[77.3px] object-contain" alt="status indicators" />
+      {/* 오른쪽: 아이콘들 */}
+      <div className="flex items-center gap-1">
+        <div style={{ filter: theme === 'light' ? 'brightness(0) invert(1)' : 'none' }}>
+          <Icon name="signal" className="h-4 w-4" />
+        </div>
+        <div style={{ filter: theme === 'light' ? 'brightness(0) invert(1)' : 'none' }}>
+          <Icon name="connection" className="h-4 w-4" />
+        </div>
+        <div style={{ filter: theme === 'light' ? 'brightness(0) invert(1)' : 'none' }}>
+          <Icon name="battery" className="h-4 w-4" />
         </div>
       </div>
     </div>

@@ -9,10 +9,12 @@ type Props = {
 
 export default function MenuTab({ children }: Props) {
   return (
-    <div className="flex h-full flex-col">
+    <div className="flex h-full flex-col bg-[var(--white)]">
       <StatusBar />
       <div className="flex-1 overflow-auto">{children}</div>
       <Menu />
+      {/* 메뉴탭 아래 32px 간격 */}
+      <div className="h-[32px]" />
     </div>
   );
 }

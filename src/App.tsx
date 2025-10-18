@@ -5,6 +5,8 @@ import Chats from '@/pages/Chats';
 import Call from '@/pages/Call';
 import More from '@/pages/More';
 import ChatRoom from '@/pages/ChatRoom';
+import MyProfile from '@/pages/MyProfile';
+import FriendProfile from '@/pages/FriendProfile';
 import MobileFrame from '@/layouts/MobileFrame';
 import ErrorBoundary from '@/components/dev/ErrorBoundary';
 
@@ -59,6 +61,26 @@ export default function App() {
             element={
               <MobileFrame>
                 <ChatRoom />
+              </MobileFrame>
+            }
+          />
+
+          {/* 내 프로필 - 하단바 배경 없음 */}
+          <Route
+            path="/profile/me"
+            element={
+              <MobileFrame bottomBarBg={false}>
+                <MyProfile />
+              </MobileFrame>
+            }
+          />
+
+          {/* 친구 프로필 */}
+          <Route
+            path="/profile/:userId"
+            element={
+              <MobileFrame>
+                <FriendProfile />
               </MobileFrame>
             }
           />
