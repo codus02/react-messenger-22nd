@@ -1,5 +1,5 @@
 // src/pages/Chats.tsx
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 import MenuTab from '@/layouts/MenuTab';
 import Header from '@/components/chatrooms/Header';
 import Roomsearch from '@/components/chatrooms/Roomsearch';
