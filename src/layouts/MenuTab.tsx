@@ -11,7 +11,9 @@ export default function MenuTab({ children }: Props) {
   return (
     <div className="flex h-full flex-col bg-[var(--white)]">
       <StatusBar />
-      <div className="flex-1 overflow-auto">{children}</div>
+      {/* no-scrollbar 클래스 추가 */}
+      <div className="no-scrollbar flex-1 overflow-auto">{children}</div>
+      <div className="h-[32px]" />
       <Menu />
     </div>
   );

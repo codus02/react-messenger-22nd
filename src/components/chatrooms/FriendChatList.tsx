@@ -76,8 +76,7 @@ export default function FriendChatList() {
   ];
 
   return (
-    <div className="no-scrollbar flex flex-col gap-4 overflow-auto bg-[var(--white)] px-4">
-      {/* ↑ no-scrollbar 클래스 확인 */}
+    <div className="flex flex-col gap-4 bg-[var(--white)] px-4">
       {chatRooms.map((room) => (
         <ChatRoomItem
           key={room.id}
