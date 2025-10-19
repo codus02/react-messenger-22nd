@@ -1,4 +1,4 @@
-// src/App.tsx
+// src/App.tsx - MyProfile만 bottomBarBg={false} 제거
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
 import Chats from '@/pages/Chats';
@@ -15,7 +15,6 @@ export default function App() {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
-          {/* 홈 */}
           <Route
             path="/"
             element={
@@ -24,8 +23,6 @@ export default function App() {
               </MobileFrame>
             }
           />
-
-          {/* 채팅 목록 */}
           <Route
             path="/chats"
             element={
@@ -34,8 +31,6 @@ export default function App() {
               </MobileFrame>
             }
           />
-
-          {/* 전화 */}
           <Route
             path="/call"
             element={
@@ -44,8 +39,6 @@ export default function App() {
               </MobileFrame>
             }
           />
-
-          {/* 더보기 */}
           <Route
             path="/more"
             element={
@@ -54,8 +47,6 @@ export default function App() {
               </MobileFrame>
             }
           />
-
-          {/* 개별 채팅방 */}
           <Route
             path="/chat/:chatId"
             element={
@@ -64,18 +55,14 @@ export default function App() {
               </MobileFrame>
             }
           />
-
-          {/* 내 프로필 - 하단바 배경 없음 */}
           <Route
             path="/profile/me"
             element={
-              <MobileFrame bottomBarBg={false}>
+              <MobileFrame>
                 <MyProfile />
               </MobileFrame>
             }
           />
-
-          {/* 친구 프로필 */}
           <Route
             path="/profile/:userId"
             element={

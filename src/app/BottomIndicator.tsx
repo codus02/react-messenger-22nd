@@ -1,8 +1,7 @@
 // src/app/BottomIndicator.tsx
 export default function BottomIndicator() {
   return (
-    <div className="flex h-[34px] items-center justify-center">
-      {/* 검은 바만 - 배경 투명 */}
+    <div className="flex h-[34px] items-center justify-center bg-[var(--white)]">
       <div
         className="rounded-full"
         style={{

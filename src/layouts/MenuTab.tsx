@@ -13,8 +13,6 @@ export default function MenuTab({ children }: Props) {
       <StatusBar />
       <div className="flex-1 overflow-auto">{children}</div>
       <Menu />
-      {/* 메뉴탭 아래 32px 간격 */}
-      <div className="h-[32px]" />
     </div>
   );
 }
