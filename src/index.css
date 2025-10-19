@@ -24,11 +24,12 @@
 
 @layer utilities {
   /* 스크롤은 가능, 스크롤바만 숨김 */
-  .no-scrollbar {
-    -ms-overflow-style: none; /* IE/Edge */
-    scrollbar-width: none; /* Firefox */
-  }
   .no-scrollbar::-webkit-scrollbar {
-    display: none; /* Chrome/Safari/Opera */
+    display: none;
+  }
+
+  .no-scrollbar {
+    -ms-overflow-style: none; /* IE and Edge */
+    scrollbar-width: none; /* Firefox */
   }
 }

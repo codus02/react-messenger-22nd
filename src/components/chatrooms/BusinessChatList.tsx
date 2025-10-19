@@ -36,7 +36,7 @@ export default function BusinessChatList() {
   ];
 
   return (
-    <div className="flex flex-col gap-4 bg-[var(--white)] px-4 pt-4">
+    <div className="flex flex-col gap-4 bg-[var(--white)] px-4">
       {chatRooms.map((room) => (
         <ChatRoomItem
           key={room.id}

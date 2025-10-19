@@ -5,17 +5,16 @@ import { useNavigate } from 'react-router-dom';
 type Props = {
   profileImage?: string;
   roomName: string;
-  memberCount: number;
+  memberCount?: number; // optional로 변경
   lastMessage: string;
   time: string;
   unreadCount?: number;
   chatId?: string;
 };
-
 export default function ChatRoomItem({
   profileImage = 'default-profile',
   roomName,
-  memberCount,
+  memberCount, // memberCount가 없을 수도 있음
   lastMessage,
   time,
   unreadCount = 0,
@@ -41,34 +40,32 @@ export default function ChatRoomItem({
     }
   };
 
-  // chatId가 있을 때만 클릭 가능
   const isClickable = !!chatId;
 
   return (
     <div
-      className={`flex min-h-[64px] w-[343px] items-start gap-4 py-2 transition-colors ${
+      className={`flex min-h-[64px] w-[343px] items-start gap-4 transition-colors ${
         isClickable ? 'cursor-pointer hover:bg-[var(--gray-50)]' : ''
       }`}
       onClick={isClickable ? handleClick : undefined}
     >
-      {/* 프로필 이미지 */}
       <div className="h-16 w-16 flex-shrink-0">
         <Icon name={profileImage} className="h-full w-full rounded-lg object-cover" />
       </div>
 
-      {/* 오른쪽 정보 영역 */}
       <div className="flex flex-1 flex-col gap-1">
-        {/* 상단: 제목 + 인원수 + 시간 */}
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-[16px] font-semibold text-[#222]">{roomName}</span>
-            <span className="text-[14px] font-normal text-[var(--gray-500)]">{memberCount}</span>
+            {/* memberCount가 있을 때만 표시 */}
+            {memberCount !== undefined && (
+              <span className="text-[14px] font-normal text-[var(--gray-500)]">{memberCount}</span>
+            )}
           </div>
 
           <span className="text-[12px] font-medium text-[var(--gray-400)]">{time}</span>
         </div>
 
-        {/* 하단: 최근 메시지 + 안읽은 수 */}
         <div className="flex items-start justify-between gap-2">
           <div
             className="flex-1 text-[14px] font-medium"
