@@ -45,7 +45,7 @@ export default function FriendList() {
         </div>
 
         <Icon
-          name="arrow-right"
+          name="arrow-down-2"
           className={`h-4 w-4 text-[var(--gray-400)] transition-transform ${businessOpen ? 'rotate-180' : ''}`}
         />
       </button>
@@ -70,7 +70,7 @@ export default function FriendList() {
         </div>
 
         <Icon
-          name="arrow-right"
+          name="arrow-down-2"
           className={`h-4 w-4 text-[var(--gray-400)] transition-transform ${friendOpen ? 'rotate-180' : ''}`}
         />
       </button>
