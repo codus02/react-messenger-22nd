@@ -4,7 +4,7 @@ import BottomIndicator from '@/app/BottomIndicator';
 
 type Props = {
   children: ReactNode;
-  bottomBarBg?: 'white' | 'transparent'; // 하단바 배경색
+  bottomBarBg?: 'white' | 'transparent';
 };
 
 export default function MobileFrame({ children, bottomBarBg = 'white' }: Props) {
@@ -14,8 +14,8 @@ export default function MobileFrame({ children, bottomBarBg = 'white' }: Props) 
         {/* children 영역 */}
         <div className="flex flex-1 flex-col overflow-hidden">{children}</div>
 
-        {/* 하단바 - 조건부 배경색 */}
-        <div className={bottomBarBg === 'white' ? 'bg-[var(--white)]' : ''}>
+        {/* 하단바 - z-index 추가하여 항상 위에 표시 */}
+        <div className={`relative z-50 ${bottomBarBg === 'white' ? 'bg-[var(--white)]' : ''}`}>
           <BottomIndicator />
         </div>
       </div>
