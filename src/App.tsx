@@ -1,4 +1,4 @@
-// src/App.tsx - MyProfile만 bottomBarBg={false} 제거
+// src/App.tsx
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Home from '@/pages/Home';
 import Chats from '@/pages/Chats';
@@ -15,58 +15,71 @@ export default function App() {
     <BrowserRouter>
       <ErrorBoundary>
         <Routes>
+          {/* 홈 - 흰색 하단바 */}
           <Route
             path="/"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <Home />
               </MobileFrame>
             }
           />
+
+          {/* 채팅 목록 - 흰색 하단바 */}
           <Route
             path="/chats"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <Chats />
               </MobileFrame>
             }
           />
+
+          {/* 전화 - 흰색 하단바 */}
           <Route
             path="/call"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <Call />
               </MobileFrame>
             }
           />
+
+          {/* 더보기 - 흰색 하단바 */}
           <Route
             path="/more"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <More />
               </MobileFrame>
             }
           />
+
+          {/* 채팅방 - 흰색 하단바 */}
           <Route
             path="/chat/:chatId"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <ChatRoom />
               </MobileFrame>
             }
           />
+
+          {/* 내 프로필 - 투명 하단바 */}
           <Route
             path="/profile/me"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="transparent">
                 <MyProfile />
               </MobileFrame>
             }
           />
+
+          {/* 친구 프로필 - 흰색 하단바 */}
           <Route
             path="/profile/:userId"
             element={
-              <MobileFrame>
+              <MobileFrame bottomBarBg="white">
                 <FriendProfile />
               </MobileFrame>
             }

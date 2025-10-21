@@ -109,13 +109,14 @@ export default function ChatRoom() {
   }, [messages, currentDate, chatId]);
 
   return (
-    <>
+    <div className="flex h-full flex-col bg-[var(--white)]">
+      {/* 상태바 - 흰색 배경 */}
       <StatusBar />
       <HeaderBar title="CEOS 22기 잡담방" onBack={() => nav('/chats')} />
       <div className="min-h-0 flex-1 bg-[var(--green-100)]">
         <MessageList messages={messagesWithToday} usersById={usersById} meId={ME_ID} />
       </div>
       <ChatInput onSend={sendText} />
-    </>
+    </div>
   );
 }
