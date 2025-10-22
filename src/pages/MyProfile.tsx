@@ -9,7 +9,7 @@ export default function MyProfile() {
   return (
     <>
       {/* 배경 - absolute로 전체 화면 덮기, z-index 낮게 */}
-      <div className="absolute inset-0 z-0 bg-[var(--gray-700)]" />
+      <div className="absolute inset-0 z-0 bg-[var(--gray-800)]" />
 
       {/* 컨텐츠 - relative로 배경 위에 표시, z-index 높게 */}
       <div className="relative z-10 flex h-full flex-col">

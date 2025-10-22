@@ -1,5 +1,6 @@
 // src/components/home/FriendItem.tsx
 import { Icon } from '@/components/Icon';
+import { useNavigate } from 'react-router-dom';
 
 type Props = {
   profileImage: string;
@@ -8,8 +9,22 @@ type Props = {
 };
 
 export default function FriendItem({ profileImage, name, count }: Props) {
+  const navigate = useNavigate();
+
+  const handleClick = () => {
+    // '세오스'이면 친구 프로필로 이동 (모두 같은 페이지)
+    if (name === '세오스') {
+      navigate('/profile/ceos');
+    }
+  };
+
   return (
-    <div className="flex h-[42px] w-full items-center px-4">
+    <div
+      className={`flex h-[42px] w-full items-center px-4 ${
+        name === '세오스' ? 'cursor-pointer hover:bg-[var(--gray-50)]' : ''
+      }`}
+      onClick={handleClick}
+    >
       {/* 프로필 사진 */}
       <div className="h-[42px] w-[42px] flex-shrink-0">
         <Icon name={profileImage} className="h-full w-full rounded-lg object-cover" />
@@ -41,7 +56,7 @@ export default function FriendItem({ profileImage, name, count }: Props) {
             {count}
           </span>
           <div style={{ color: 'var(--gray-400)' }}>
-            <Icon name="arrow-right" className="h-4 w-4" />
+            <Icon name="arrow-down-2" className="h-4 w-4" />
           </div>
         </div>
       )}

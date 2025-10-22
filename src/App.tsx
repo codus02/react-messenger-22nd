@@ -75,11 +75,11 @@ export default function App() {
             }
           />
 
-          {/* 친구 프로필 - 흰색 하단바 */}
+          {/* 친구 프로필 - 투명 하단바 */}
           <Route
             path="/profile/:userId"
             element={
-              <MobileFrame bottomBarBg="white">
+              <MobileFrame bottomBarBg="transparent">
                 <FriendProfile />
               </MobileFrame>
             }
