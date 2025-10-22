@@ -1,4 +1,4 @@
-//src>components>chat>MessageBubble.tsx
+// src/components/chat/MessageBubble.tsx
 import type { TextMessage, User } from '@/types/chat';
 
 type Props = {
@@ -7,7 +7,7 @@ type Props = {
   user?: User;
   showAvatar?: boolean;
   time?: string;
-  spacing?: 'same-user' | 'different-user' | 'first'; // ← 'first' 추가
+  spacing?: 'same-user' | 'different-user' | 'first';
 };
 
 export default function MessageBubble({ message, isMine, user, showAvatar, time, spacing = 'same-user' }: Props) {
@@ -23,12 +23,10 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time,
       </span>
     ) : null;
 
-  // 간격 계산: 첫 메시지는 0, 같은 사용자 4px, 다른 사용자 16px
   const marginTop = spacing === 'first' ? '' : spacing === 'different-user' ? 'mt-4' : 'mt-1';
 
   return (
     <div className={`flex gap-3 ${marginTop} ${isMine ? 'items-end justify-end' : 'items-start justify-start'}`}>
-      {/* ↑ marginBottom 제거, marginTop으로 변경 */}
       {!isMine && (
         <div className="h-9 w-9 shrink-0 self-start">
           {showAvatar ? (
@@ -45,13 +43,33 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time,
 
       {isMine && <Time side="left" />}
 
-      <div className={`flex max-w-[204px] flex-col ${isMine ? 'items-end' : 'items-start'}`}>
+      <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
         {!isMine && showAvatar && (
           <div className="text-body2-medium mb-1 pl-1 text-[color:var(--gray-800)]">{user?.name ?? ''}</div>
         )}
 
-        <div className="text-body2-medium rounded-[12px] bg-[var(--white)] px-3 py-2 break-words break-all whitespace-pre-wrap text-[color:var(--gray-800)]">
-          {message.text}
+        <div
+          className="flex items-center bg-[var(--white)]"
+          style={{
+            maxWidth: '204px',
+            padding: '8px 12px',
+            borderRadius: isMine ? '8px 0 8px 8px' : '0 8px 8px 8px',
+          }}
+        >
+          <div
+            className="break-words break-all whitespace-pre-wrap"
+            style={{
+              maxWidth: '180px',
+              color: 'var(--gray-scale-gray-800, #3B3B45)',
+              fontSize: '14px',
+              fontWeight: 500,
+              lineHeight: '140%',
+              letterSpacing: '-0.042px',
+              textAlign: isMine ? 'right' : 'left',
+            }}
+          >
+            {message.text}
+          </div>
         </div>
       </div>
 

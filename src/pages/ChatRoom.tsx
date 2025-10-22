@@ -1,5 +1,5 @@
 // src/pages/ChatRoom.tsx
-import { useState, useEffect, useMemo } from 'react';
+//import { useState, useEffect, useMemo } from 'react';
 import StatusBar from '@/app/StatusBar';
 import HeaderBar from '@/app/HeaderBar';
 import MessageList from '@/components/chat/MessageList';
@@ -52,7 +52,7 @@ const SEED: TextMessage[] = [
     kind: 'text',
     chatId: CHAT_ID,
     userId: ME_ID,
-    text: '22기 디자인 세오스입니다! 잘 부탁드립니다!!',
+    text: '22기 디자인 세오스입니다!\n잘 부탁드립니다!!',
     createdAt: '2025-09-18T12:41:00+09:00',
   },
   {
@@ -77,44 +77,13 @@ export default function ChatRoom() {
   const nav = useNavigate();
   const { messages, sendText } = useLocalMessages(chatId || CHAT_ID, ME_ID, SEED);
 
-  const [currentDate, setCurrentDate] = useState(() => new Date().toISOString().slice(0, 10));
-
-  useEffect(() => {
-    const checkDate = () => {
-      const newDate = new Date().toISOString().slice(0, 10);
-      if (newDate !== currentDate) {
-        setCurrentDate(newDate);
-      }
-    };
-    const interval = setInterval(checkDate, 30_000);
-    return () => clearInterval(interval);
-  }, [currentDate]);
-
-  const messagesWithToday = useMemo(() => {
-    if (messages.length === 0) return messages;
-    const lastMessage = messages[messages.length - 1];
-    const lastDate = lastMessage.createdAt.slice(0, 10);
-    if (lastDate < currentDate) {
-      const dummyMessage: TextMessage = {
-        id: `date-${currentDate}`,
-        kind: 'text',
-        text: '',
-        userId: ME_ID,
-        chatId: chatId || CHAT_ID,
-        createdAt: new Date().toISOString(),
-      };
-      return [...messages, dummyMessage];
-    }
-    return messages;
-  }, [messages, currentDate, chatId]);
-
+  // 더미 날짜 메시지 생성 로직 제거 - 실제 메시지만 표시
   return (
     <div className="flex h-full flex-col bg-[var(--white)]">
-      {/* 상태바 - 흰색 배경 */}
       <StatusBar />
       <HeaderBar title="CEOS 22기 잡담방" onBack={() => nav('/chats')} />
       <div className="min-h-0 flex-1 bg-[var(--green-100)]">
-        <MessageList messages={messagesWithToday} usersById={usersById} meId={ME_ID} />
+        <MessageList messages={messages} usersById={usersById} meId={ME_ID} />
       </div>
       <ChatInput onSend={sendText} />
     </div>
