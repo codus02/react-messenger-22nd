@@ -5,32 +5,23 @@ import { useNavigate } from 'react-router-dom';
 type Props = {
   profileImage?: string;
   roomName: string;
-  memberCount?: number; // optional로 변경
+  memberCount?: number;
   lastMessage: string;
   time: string;
   unreadCount?: number;
   chatId?: string;
 };
+
 export default function ChatRoomItem({
   profileImage = 'default-profile',
   roomName,
-  memberCount, // memberCount가 없을 수도 있음
+  memberCount,
   lastMessage,
   time,
   unreadCount = 0,
   chatId,
 }: Props) {
   const navigate = useNavigate();
-
-  const renderMessage = () => {
-    const lines = lastMessage.split('\n');
-    return lines.map((line, index) => (
-      <span key={index}>
-        {line}
-        {index < lines.length - 1 && <br />}
-      </span>
-    ));
-  };
 
   const messageColor = unreadCount > 0 ? 'var(--gray-800)' : 'var(--gray-500)';
 
@@ -57,27 +48,27 @@ export default function ChatRoomItem({
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-2">
             <span className="text-[16px] font-semibold text-[#222]">{roomName}</span>
-            {/* memberCount가 있을 때만 표시 */}
             {memberCount !== undefined && (
               <span className="text-[14px] font-normal text-[var(--gray-500)]">{memberCount}</span>
             )}
           </div>
-
           <span className="text-[12px] font-medium text-[var(--gray-400)]">{time}</span>
         </div>
 
         <div className="flex items-start justify-between gap-2">
+          {/* ▼ 미리보기(최근 메시지) 영역: 가로 200px / 세로 40px, 최대 2줄 */}
           <div
-            className="flex-1 text-[14px] font-medium"
+            className="h-10 w-[200px] shrink-0 overflow-hidden text-[14px] leading-5 font-medium break-words"
             style={{
               color: messageColor,
               display: '-webkit-box',
               WebkitLineClamp: 2,
               WebkitBoxOrient: 'vertical',
-              overflow: 'hidden',
+              whiteSpace: 'pre-wrap', // \n 보존 + 자동 줄바꿈
             }}
+            title={lastMessage}
           >
-            {renderMessage()}
+            {lastMessage}
           </div>
 
           {unreadCount > 0 && (
