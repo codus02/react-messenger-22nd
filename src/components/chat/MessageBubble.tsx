@@ -35,7 +35,6 @@ export default function MessageBubble({
 
   const marginTop = spacing === 'first' ? '' : spacing === 'different-user' ? 'mt-4' : 'mt-1';
 
-  // 더블클릭 핸들러
   const handleDoubleClick = () => {
     onToggleReaction(message.id);
   };
@@ -63,11 +62,10 @@ export default function MessageBubble({
           <div className="text-body2-medium mb-1 pl-1 text-[color:var(--gray-800)]">{user?.name ?? ''}</div>
         )}
 
-        {/* 말풍선 + 하트를 flex-col로 감싸기 */}
         <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
-          {/* 말풍선 */}
+          {/* 말풍선 - cursor-pointer 제거 */}
           <div
-            className="flex cursor-pointer items-center bg-[var(--white)]"
+            className="flex items-center bg-[var(--white)]"
             onDoubleClick={handleDoubleClick}
             style={{
               maxWidth: '204px',
@@ -91,16 +89,15 @@ export default function MessageBubble({
             </div>
           </div>
 
-          {/* 하트 이모지 - 말풍선 아래 2px 간격 */}
+          {/* 하트 이모지 */}
           {message.reaction && (
             <div
               className="mt-[2px]"
               style={{
-                backgroundColor: 'var(--gray-100)',
+                backgroundColor: 'var(--gray-200)',
                 borderRadius: '10px',
                 padding: '2px 6px',
                 fontSize: '14px',
-                border: '1px solid var(--gray-300)',
               }}
             >
               ❤️
