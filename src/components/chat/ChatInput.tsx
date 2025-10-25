@@ -9,17 +9,17 @@ type Props = {
 export default function ChatInput({ onSend }: Props) {
   const [value, setValue] = useState('');
   const taRef = useRef<HTMLTextAreaElement>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null); // 파일 input ref 추가
 
   // 스펙
-  const BAR_MIN = 56; // 바 최소 높이 (1줄: 40 + 상하 패딩 8*2)
-  const W_EMPTY = 167; // 입력 전 텍스트 영역 가로
-  const W_TYPED = 239; // 입력 후 텍스트 영역 가로
-  const ONE_H = 40; // 1줄 입력칸 높이
-  const TWO_H = 60; // 2줄 입력칸 높이
-  const BAR_PADY = 8; // 바 전체의 상하 패딩
-  const H_PADX = 32; // 버블 좌우 padding 16+16
-  const ONE_PADY = 4; // 1줄 입력칸 내부 상하 padding
-  const TWO_PADY = 8; // 2줄 입력칸 내부 상하 padding
+  const BAR_MIN = 56;
+  const W_EMPTY = 167;
+  const W_TYPED = 239;
+  const ONE_H = 40;
+  const TWO_H = 60;
+  const BAR_PADY = 8;
+  const ONE_PADY = 4;
+  const TWO_PADY = 8;
 
   const [boxH, setBoxH] = useState<number>(ONE_H);
   const hasText = value.trim().length > 0;
@@ -28,9 +28,7 @@ export default function ChatInput({ onSend }: Props) {
     const el = taRef.current;
     if (!el) return;
 
-    const measureWidth = hasText ? W_TYPED : W_EMPTY;
-    el.style.width = `${measureWidth}px`;
-
+    el.style.width = `${hasText ? W_TYPED : W_EMPTY}px`;
     el.style.height = 'auto';
 
     const cs = window.getComputedStyle(el);
@@ -41,12 +39,9 @@ export default function ChatInput({ onSend }: Props) {
     const oneLineThreshold = lineH + padV + borderV + EPS;
 
     const contentH = el.scrollHeight;
-
-    // 1줄: 32px 텍스트 영역, 2줄: 44px 텍스트 영역 (60 - 8 - 8)
     const target = contentH > oneLineThreshold ? TWO_H : ONE_H;
     setBoxH(target);
 
-    // textarea 최대 높이 제한
     const maxTextAreaHeight = target === TWO_H ? 44 : 32;
     el.style.height = `${Math.min(contentH, maxTextAreaHeight)}px`;
     el.style.maxHeight = `${maxTextAreaHeight}px`;
@@ -55,7 +50,6 @@ export default function ChatInput({ onSend }: Props) {
 
   useEffect(() => {
     autoResize();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [value]);
 
   const send = useCallback(async () => {
@@ -74,7 +68,19 @@ export default function ChatInput({ onSend }: Props) {
     }
   };
 
-  // 현재 줄 수에 따른 패딩 계산
+  // 파일 선택 핸들러
+  const handleImageClick = () => {
+    fileInputRef.current?.click();
+  };
+
+  const handleFileSelect = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const files = e.target.files;
+    if (files && files.length > 0) {
+      console.log('선택된 파일:', files[0]);
+      // 파일 업로드 로직 추가 가능
+    }
+  };
+
   const currentPadY = boxH === TWO_H ? TWO_PADY : ONE_PADY;
 
   return (
@@ -82,7 +88,7 @@ export default function ChatInput({ onSend }: Props) {
       className="flex items-center bg-[var(--white)] px-4"
       style={{
         minHeight: BAR_MIN,
-        height: boxH + BAR_PADY * 2, // 입력칸 높이 + 위아래 패딩 8px씩
+        height: boxH + BAR_PADY * 2,
         gap: '12px',
         paddingTop: `${BAR_PADY}px`,
         paddingBottom: `${BAR_PADY}px`,
@@ -97,9 +103,23 @@ export default function ChatInput({ onSend }: Props) {
           <button type="button" className="grid h-6 w-6 place-items-center" aria-label="카메라">
             <Icon name="camera" className="h-6 w-6" alt="카메라" />
           </button>
-          <button type="button" className="grid h-6 w-6 place-items-center" aria-label="이미지">
-            <Icon name="image" className="h-6 w-6" alt="이미지" />
+          <button
+            type="button"
+            onClick={handleImageClick}
+            className="grid h-6 w-6 cursor-pointer place-items-center hover:opacity-70"
+            aria-label="이미지"
+          >
+            <div style={{ pointerEvents: 'none' }}>
+              <Icon name="image" className="h-6 w-6" alt="이미지" />
+            </div>
           </button>
+          <input
+            ref={fileInputRef}
+            type="file"
+            accept="image/*"
+            onChange={handleFileSelect}
+            style={{ display: 'none' }}
+          />
         </>
       ) : (
         <button type="button" className="grid h-6 w-6 place-items-center" aria-label="닫기">
@@ -107,19 +127,17 @@ export default function ChatInput({ onSend }: Props) {
         </button>
       )}
 
-      {/* 입력칸 */}
+      {/* 입력칸 - 중앙 정렬 및 border-radius 조건부 */}
       <div className="flex flex-1 justify-center">
         <div
-          className="rounded-full bg-[var(--gray-100)]"
+          className="bg-[var(--gray-100)]"
           style={{
-            width: (hasText ? W_TYPED : W_EMPTY) + H_PADX,
+            width: (hasText ? W_TYPED : W_EMPTY) + 32,
             height: boxH,
+            padding: `${currentPadY}px 16px`,
+            borderRadius: hasText ? '20px' : '12px', // 조건부 border-radius
             display: 'flex',
-            alignItems: 'center',
-            paddingLeft: '16px',
-            paddingRight: '16px',
-            paddingTop: `${currentPadY}px`,
-            paddingBottom: `${currentPadY}px`,
+            alignItems: 'center', // 수직 중앙 정렬
             transition: 'width 120ms ease, height 120ms ease',
           }}
         >
@@ -130,21 +148,7 @@ export default function ChatInput({ onSend }: Props) {
             onChange={(e) => setValue(e.target.value)}
             onKeyDown={onKeyDown}
             placeholder="메시지를 입력하세요"
-            aria-label="메시지 입력"
-            className={[
-              'no-scrollbar',
-              'text-body2-medium',
-              'resize-none',
-              'bg-transparent',
-              'leading-5',
-              'break-words',
-              'whitespace-pre-wrap',
-              'text-[color:var(--gray-800)]',
-              'placeholder-[color:var(--gray-400)]',
-              'outline-none',
-              'p-0',
-              'box-border',
-            ].join(' ')}
+            className="no-scrollbar text-body2-medium resize-none bg-transparent p-0 leading-5 break-words whitespace-pre-wrap text-[color:var(--gray-800)] placeholder-[color:var(--gray-400)] outline-none"
             style={{ width: hasText ? W_TYPED : W_EMPTY }}
           />
         </div>

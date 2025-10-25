@@ -2,14 +2,23 @@
 import { useNavigate } from 'react-router-dom';
 import StatusBar from '@/app/StatusBar';
 import { Icon } from '@/components/Icon';
+import myProfileBackgroundUrl from '@/icons/my-profile-background.svg';
 
 export default function MyProfile() {
   const navigate = useNavigate();
 
   return (
     <>
-      {/* 배경 - absolute로 전체 화면 덮기, z-index 낮게 */}
-      <div className="absolute inset-0 z-0 bg-[var(--gray-800)]" />
+      {/* 배경 이미지 - absolute로 전체 화면 덮기, z-index 낮게 */}
+      <div
+        className="absolute inset-0 z-0"
+        style={{
+          backgroundImage: `url(${myProfileBackgroundUrl})`,
+          backgroundSize: 'cover',
+          backgroundPosition: 'center',
+          backgroundRepeat: 'no-repeat',
+        }}
+      />
 
       {/* 컨텐츠 - relative로 배경 위에 표시, z-index 높게 */}
       <div className="relative z-10 flex h-full flex-col">
