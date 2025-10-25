@@ -94,7 +94,8 @@ export function useLocalMessages(chatId: string, meId: string, seed: TextMessage
 
       dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
 
-      // 🆕 채팅 목록도 업데이트
+      // 채팅 목록 업데이트
+      console.log('💬 Sending message, chatId:', chatId); // 디버깅
       updateChatList(chatId, text.trim());
     },
     [chatId, meId],

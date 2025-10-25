@@ -1,13 +1,12 @@
 // src/features/chat/hooks/useChatList.ts
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import chatListData from '@/data/chatList.json';
 
-// 타입 정의 수정
 type ChatRoom = {
   id: number;
   chatId: string | null;
-  profileImage: string; // avatarUrl → profileImage
-  roomName: string; // name → roomName
+  profileImage: string;
+  roomName: string;
   memberCount: number | null;
   lastMessage: string;
   time: string;
@@ -20,42 +19,52 @@ const STORAGE_KEY = 'chatList';
 export function useChatList() {
   const [chatList, setChatList] = useState<ChatRoom[]>([]);
 
-  useEffect(() => {
+  // 로컬스토리지에서 불러오는 함수
+  const loadChatList = useCallback(() => {
     const saved = localStorage.getItem(STORAGE_KEY);
     if (saved) {
       try {
-        setChatList(JSON.parse(saved));
-      } catch {
-        setChatList(chatListData as ChatRoom[]);
-        localStorage.setItem(STORAGE_KEY, JSON.stringify(chatListData));
+        const parsed = JSON.parse(saved) as ChatRoom[];
+        setChatList(parsed);
+        console.log('✅ Chat list loaded:', parsed); // 디버깅
+        return;
+      } catch (error) {
+        console.error('Failed to parse chat list:', error);
       }
-    } else {
-      setChatList(chatListData as ChatRoom[]);
-      localStorage.setItem(STORAGE_KEY, JSON.stringify(chatListData));
     }
+    // 저장된 데이터 없으면 초기 데이터 사용
+    setChatList(chatListData as ChatRoom[]);
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(chatListData));
   }, []);
+
+  // 초기 로드
+  useEffect(() => {
+    loadChatList();
+  }, [loadChatList]);
 
   // storage 이벤트 리스너
   useEffect(() => {
-    const handleStorageChange = () => {
-      const saved = localStorage.getItem(STORAGE_KEY);
-      if (saved) {
-        try {
-          setChatList(JSON.parse(saved));
-        } catch (error) {
-          console.error('Failed to parse chat list:', error);
-        }
-      }
+    const handleStorageChange = (e?: StorageEvent) => {
+      console.log('🔄 Storage event triggered:', e?.key); // 디버깅
+      loadChatList();
     };
 
+    const handleCustomEvent = () => {
+      console.log('🔄 Custom event triggered'); // 디버깅
+      loadChatList();
+    };
+
+    // 다른 탭에서의 변경 감지
     window.addEventListener('storage', handleStorageChange);
-    window.addEventListener('chatListUpdated', handleStorageChange);
+
+    // 같은 탭에서의 변경 감지 (커스텀 이벤트)
+    window.addEventListener('chatListUpdated', handleCustomEvent);
 
     return () => {
       window.removeEventListener('storage', handleStorageChange);
-      window.removeEventListener('chatListUpdated', handleStorageChange);
+      window.removeEventListener('chatListUpdated', handleCustomEvent);
     };
-  }, []);
+  }, [loadChatList]);
 
   return chatList;
 }
@@ -71,12 +80,19 @@ function formatTime(date: Date): string {
 
 // 채팅 목록 업데이트 함수
 export function updateChatList(chatId: string, lastMessage: string) {
+  console.log('📝 Updating chat list for:', chatId, lastMessage); // 디버깅
+
   const saved = localStorage.getItem(STORAGE_KEY);
-  if (!saved) return;
+  if (!saved) {
+    console.error('❌ No chat list found in storage');
+    return;
+  }
 
   try {
     const chatList: ChatRoom[] = JSON.parse(saved);
     const chatIndex = chatList.findIndex((chat) => chat.chatId === chatId);
+
+    console.log('🔍 Found chat at index:', chatIndex); // 디버깅
 
     if (chatIndex !== -1) {
       const now = new Date();
@@ -89,13 +105,20 @@ export function updateChatList(chatId: string, lastMessage: string) {
         time,
       };
 
+      console.log('✅ Updated chat:', chatList[chatIndex]); // 디버깅
+
       // 로컬스토리지에 저장
       localStorage.setItem(STORAGE_KEY, JSON.stringify(chatList));
 
       // 커스텀 이벤트 발생
-      window.dispatchEvent(new Event('chatListUpdated'));
+      const event = new Event('chatListUpdated');
+      window.dispatchEvent(event);
+
+      console.log('🚀 Event dispatched'); // 디버깅
+    } else {
+      console.error('❌ Chat not found with chatId:', chatId);
     }
   } catch (error) {
-    console.error('Failed to update chat list:', error);
+    console.error('❌ Failed to update chat list:', error);
   }
 }
