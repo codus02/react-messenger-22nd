@@ -39,6 +39,12 @@ export default function MessageBubble({
     onToggleReaction(message.id);
   };
 
+  // 하트 클릭 핸들러 추가
+  const handleHeartClick = (e: React.MouseEvent) => {
+    e.stopPropagation(); // 이벤트 버블링 방지
+    onToggleReaction(message.id);
+  };
+
   return (
     <div className={`flex gap-3 ${marginTop} ${isMine ? 'items-end justify-end' : 'items-start justify-start'}`}>
       {!isMine && (
@@ -63,9 +69,9 @@ export default function MessageBubble({
         )}
 
         <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
-          {/* 말풍선 - cursor-pointer 제거 */}
+          {/* 말풍선 */}
           <div
-            className="flex items-center bg-[var(--white)]"
+            className="flex items-center bg-[var(--white)] select-none"
             onDoubleClick={handleDoubleClick}
             style={{
               maxWidth: '204px',
@@ -89,10 +95,11 @@ export default function MessageBubble({
             </div>
           </div>
 
-          {/* 하트 이모지 */}
+          {/* 하트 이모지 - 클릭 시 취소 */}
           {message.reaction && (
             <div
-              className="mt-[2px]"
+              className="mt-[2px] cursor-pointer hover:opacity-70"
+              onClick={handleHeartClick}
               style={{
                 backgroundColor: 'var(--gray-200)',
                 borderRadius: '10px',
