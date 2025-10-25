@@ -1,0 +1,112 @@
+[
+  {
+    "id": 1,
+    "chatId": "c_ceos_notice",
+    "profileImage": "ceos-notice",
+    "roomName": "CEOS 22기 공지방",
+    "memberCount": 65,
+    "lastMessage": "[2주차 세션 공지]\n...",
+    "time": "오후 12:30",
+    "unreadCount": 12,
+    "type": "business"
+  },
+  {
+    "id": 2,
+    "chatId": "c_ceos",
+    "profileImage": "ceos-chat",
+    "roomName": "CEOS 22기 잡담방",
+    "memberCount": 65,
+    "lastMessage": "안녕하세요 다들 만나서 반갑습니다!!\n다들 자기소개 부탁드릴게요~! 지...",
+    "time": "오전 10:35",
+    "unreadCount": 0,
+    "type": "business"
+  },
+  {
+    "id": 3,
+    "chatId": "c_ceos_design",
+    "profileImage": "ceos-design",
+    "roomName": "CEOS 22기 디자인파트",
+    "memberCount": 12,
+    "lastMessage": "세미나 자료 공유드립니다.",
+    "time": "9월 14일",
+    "unreadCount": 0,
+    "type": "business"
+  },
+  {
+    "id": 4,
+    "chatId": "c_friend_1",
+    "profileImage": "friend-chat-1",
+    "roomName": "세오스",
+    "memberCount": null,
+    "lastMessage": "오늘 우리 어디서 만나?",
+    "time": "오전 10:30",
+    "unreadCount": 4,
+    "type": "friend"
+  },
+  {
+    "id": 5,
+    "chatId": "c_friend_2",
+    "profileImage": "friend-chat-2",
+    "roomName": "세오스 생일파티",
+    "memberCount": 8,
+    "lastMessage": "케이크는 미리 예약했고 파티룸도 예\n약 완료입니당~!",
+    "time": "오후 6:30",
+    "unreadCount": 0,
+    "type": "friend"
+  },
+  {
+    "id": 6,
+    "chatId": "c_friend_3",
+    "profileImage": "friend-chat-3",
+    "roomName": "한강가자",
+    "memberCount": 12,
+    "lastMessage": "26일 저녁 다들 어때?",
+    "time": "9월 17일",
+    "unreadCount": 356,
+    "type": "friend"
+  },
+  {
+    "id": 7,
+    "chatId": "c_friend_4",
+    "profileImage": "friend-chat-4",
+    "roomName": "오스세",
+    "memberCount": null,
+    "lastMessage": "지금 모햅",
+    "time": "25.07.16",
+    "unreadCount": 0,
+    "type": "friend"
+  },
+  {
+    "id": 8,
+    "chatId": "c_friend_5",
+    "profileImage": "friend-chat-4",
+    "roomName": "오스세",
+    "memberCount": null,
+    "lastMessage": "허거덩~!",
+    "time": "25.04.08",
+    "unreadCount": 2,
+    "type": "friend"
+  },
+  {
+    "id": 9,
+    "chatId": "c_friend_6",
+    "profileImage": "friend-chat-4",
+    "roomName": "오스세",
+    "memberCount": null,
+    "lastMessage": "수강신청 어떻게 됐어?",
+    "time": "24.12.30",
+    "unreadCount": 0,
+    "type": "friend"
+  },
+  {
+    "id": 10,
+    "chatId": "c_friend_7",
+    "profileImage": "friend-chat-4",
+    "roomName": "오스세",
+    "memberCount": null,
+    "lastMessage": "진짜???",
+    "time": "24.09.28",
+    "unreadCount": 0,
+    "type": "friend"
+  }
+]

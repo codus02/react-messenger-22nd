@@ -1,5 +1,6 @@
 // src/components/chat/MessageBubble.tsx
 import type { TextMessage, User } from '@/types/chat';
+import { Icon } from '@/components/Icon';
 
 type Props = {
   message: TextMessage;
@@ -31,7 +32,7 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time,
         <div className="h-9 w-9 shrink-0 self-start">
           {showAvatar ? (
             user?.avatarUrl ? (
-              <img src={user.avatarUrl} alt={user?.name ?? 'user'} className="h-9 w-9 rounded-[12px] object-cover" />
+              <Icon name={user.avatarUrl} className="h-9 w-9 rounded-[12px] object-cover" />
             ) : (
               <div className="h-9 w-9 rounded-[12px] bg-[var(--gray-300)]" />
             )
@@ -43,15 +44,16 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time,
 
       {isMine && <Time side="left" />}
 
-      <div className={`flex flex-col ${isMine ? 'items-end' : 'items-start'}`}>
+      <div className={`flex max-w-[204px] flex-col ${isMine ? 'items-end' : 'items-start'}`}>
         {!isMine && showAvatar && (
           <div className="text-body2-medium mb-1 pl-1 text-[color:var(--gray-800)]">{user?.name ?? ''}</div>
         )}
 
+        {/* 말풍선 - 가변 너비 */}
         <div
           className="flex items-center bg-[var(--white)]"
           style={{
-            maxWidth: '204px',
+            maxWidth: '204px', // width → maxWidth
             padding: '8px 12px',
             borderRadius: isMine ? '8px 0 8px 8px' : '0 8px 8px 8px',
           }}
@@ -59,7 +61,7 @@ export default function MessageBubble({ message, isMine, user, showAvatar, time,
           <div
             className="break-words break-all whitespace-pre-wrap"
             style={{
-              maxWidth: '180px',
+              maxWidth: '180px', // width → maxWidth
               color: 'var(--gray-scale-gray-800, #3B3B45)',
               fontSize: '14px',
               fontWeight: 500,

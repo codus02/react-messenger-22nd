@@ -1,0 +1,22 @@
+{
+  "me": {
+    "id": "me",
+    "name": "세오스",
+    "avatarUrl": "my-profile-big"
+  },
+  "u_brown": {
+    "id": "u_brown",
+    "name": "스세오",
+    "avatarUrl": "ceoss"
+  },
+  "u_cony": {
+    "id": "u_cony",
+    "name": "오스세",
+    "avatarUrl": "ceoos"
+  },
+  "u_cceos": {
+    "id": "u_cceos",
+    "name": "세세오스",
+    "avatarUrl": "cceos"
+  }
+}

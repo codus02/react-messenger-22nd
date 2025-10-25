@@ -1,5 +1,6 @@
 // src/features/chat/hooks/useLocalMessages.ts
-import { useEffect, useState } from 'react';
+import { useReducer, useEffect, useCallback } from 'react';
+import { updateChatList } from './useChatList'; // 추가
 
 export type TextMessage = {
   id: string;
@@ -7,53 +8,101 @@ export type TextMessage = {
   chatId: string;
   userId: string;
   text: string;
-  createdAt: string; // ISO
+  createdAt: string;
 };
 
-function safeId() {
-  // 일부 브라우저/환경에서 crypto.randomUUID가 없을 수 있어 폴백
-  return (globalThis.crypto as any)?.randomUUID?.() ?? `m_${Date.now()}_${Math.random().toString(36).slice(2)}`;
+type State = {
+  messages: TextMessage[];
+  isLoading: boolean;
+};
+
+type Action =
+  | { type: 'LOAD_MESSAGES'; payload: TextMessage[] }
+  | { type: 'ADD_MESSAGE'; payload: TextMessage }
+  | { type: 'SET_LOADING'; payload: boolean };
+
+function messagesReducer(state: State, action: Action): State {
+  switch (action.type) {
+    case 'LOAD_MESSAGES':
+      return {
+        ...state,
+        messages: action.payload,
+        isLoading: false,
+      };
+    case 'ADD_MESSAGE':
+      return {
+        ...state,
+        messages: [...state.messages, action.payload],
+      };
+    case 'SET_LOADING':
+      return {
+        ...state,
+        isLoading: action.payload,
+      };
+    default:
+      return state;
+  }
 }
 
-/**
- * 채팅방별 메시지를 메모리 + localStorage에 저장/로딩.
- * - messages: 항상 배열(빈배열 포함)로 보장 → iterable 오류 방지
- * - sendText: 시각(ISO) 포함해 새 메시지 push
- */
-export function useLocalMessages(chatId: string, meId: string, seed: TextMessage[] = []) {
-  const storageKey = `msgs:${chatId}`;
+const initialState: State = {
+  messages: [],
+  isLoading: true,
+};
 
-  const [messages, setMessages] = useState<TextMessage[]>(() => {
-    try {
-      const raw = localStorage.getItem(storageKey);
-      if (raw) return JSON.parse(raw) as TextMessage[];
-    } catch {}
-    return Array.isArray(seed) ? seed : [];
-  });
+export function useLocalMessages(chatId: string, meId: string, seed: TextMessage[]) {
+  const [state, dispatch] = useReducer(messagesReducer, initialState);
 
-  // 저장
   useEffect(() => {
-    try {
-      localStorage.setItem(storageKey, JSON.stringify(messages));
-    } catch {}
-  }, [storageKey, messages]);
+    dispatch({ type: 'SET_LOADING', payload: true });
 
-  // 전송(엔터/아이콘 공용)
-  const sendText = async (text: string) => {
-    const t = text.trim();
-    if (!t) return;
+    const storageKey = `messages:${chatId}`;
+    const saved = localStorage.getItem(storageKey);
 
-    const now = new Date();
-    const msg: TextMessage = {
-      id: safeId(),
-      kind: 'text',
-      chatId,
-      userId: meId,
-      text: t,
-      createdAt: now.toISOString(),
-    };
-    setMessages((prev) => [...prev, msg]);
+    if (saved) {
+      try {
+        const parsed = JSON.parse(saved) as TextMessage[];
+        dispatch({ type: 'LOAD_MESSAGES', payload: parsed });
+      } catch (error) {
+        console.error('Failed to parse messages:', error);
+        dispatch({ type: 'LOAD_MESSAGES', payload: seed });
+      }
+    } else {
+      dispatch({ type: 'LOAD_MESSAGES', payload: seed });
+      localStorage.setItem(storageKey, JSON.stringify(seed));
+    }
+  }, [chatId, seed]);
+
+  useEffect(() => {
+    if (!state.isLoading && state.messages.length > 0) {
+      const storageKey = `messages:${chatId}`;
+      localStorage.setItem(storageKey, JSON.stringify(state.messages));
+    }
+  }, [chatId, state.messages, state.isLoading]);
+
+  const sendText = useCallback(
+    async (text: string) => {
+      if (!text.trim()) return;
+
+      const newMessage: TextMessage = {
+        id: `m_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+        kind: 'text',
+        chatId,
+        userId: meId,
+        text: text.trim(),
+        createdAt: new Date().toISOString(),
+      };
+
+      dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
+
+      // 🆕 채팅 목록도 업데이트
+      updateChatList(chatId, text.trim());
+    },
+    [chatId, meId],
+  );
+
+  return {
+    messages: state.messages,
+    isLoading: state.isLoading,
+    sendText,
   };
-
-  return { messages, sendText };
 }
