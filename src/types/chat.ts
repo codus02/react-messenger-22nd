@@ -12,9 +12,21 @@ export type TextMessage = {
   userId: string;
   text: string;
   createdAt: string;
-  reaction?: '❤️' | null; // 추가: 하트 반응
+  reaction?: '❤️' | null;
 };
 
+export type Message = TextMessage;
+export type Id = string;
+
+// ChatContext 전용
+export type Conversation = {
+  id: string;
+  title: string;
+  memberCount: number;
+  participantIds: string[];
+};
+
+// 채팅 목록 전용
 export type ChatListItem = {
   id: string;
   name: string;

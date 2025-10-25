@@ -1,8 +1,8 @@
 import React from 'react';
-import type { Message, User } from '@/types/chat';
+import type { TextMessage, User } from '@/types/chat';
 
 type Props = {
-  message: Message;
+  message: TextMessage;
   user: User;
   isMe: boolean;
 };
