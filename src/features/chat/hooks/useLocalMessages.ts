@@ -1,6 +1,6 @@
 // src/features/chat/hooks/useLocalMessages.ts
 import { useReducer, useEffect, useCallback } from 'react';
-import { updateChatList } from './useChatList'; // 추가
+import { updateChatList } from './useChatList';
 
 export type TextMessage = {
   id: string;
@@ -9,6 +9,7 @@ export type TextMessage = {
   userId: string;
   text: string;
   createdAt: string;
+  reaction?: '❤️' | null; // 추가
 };
 
 type State = {
@@ -19,6 +20,7 @@ type State = {
 type Action =
   | { type: 'LOAD_MESSAGES'; payload: TextMessage[] }
   | { type: 'ADD_MESSAGE'; payload: TextMessage }
+  | { type: 'TOGGLE_REACTION'; payload: { messageId: string } } // 추가
   | { type: 'SET_LOADING'; payload: boolean };
 
 function messagesReducer(state: State, action: Action): State {
@@ -33,6 +35,13 @@ function messagesReducer(state: State, action: Action): State {
       return {
         ...state,
         messages: [...state.messages, action.payload],
+      };
+    case 'TOGGLE_REACTION': // 추가
+      return {
+        ...state,
+        messages: state.messages.map((msg) =>
+          msg.id === action.payload.messageId ? { ...msg, reaction: msg.reaction ? null : '❤️' } : msg,
+        ),
       };
     case 'SET_LOADING':
       return {
@@ -93,17 +102,20 @@ export function useLocalMessages(chatId: string, meId: string, seed: TextMessage
       };
 
       dispatch({ type: 'ADD_MESSAGE', payload: newMessage });
-
-      // 채팅 목록 업데이트
-      console.log('💬 Sending message, chatId:', chatId); // 디버깅
       updateChatList(chatId, text.trim());
     },
     [chatId, meId],
   );
 
+  // 추가: 하트 반응 토글 함수
+  const toggleReaction = useCallback((messageId: string) => {
+    dispatch({ type: 'TOGGLE_REACTION', payload: { messageId } });
+  }, []);
+
   return {
     messages: state.messages,
     isLoading: state.isLoading,
     sendText,
+    toggleReaction, // 추가
   };
 }

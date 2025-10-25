@@ -1,30 +1,26 @@
 // src/types/chat.ts
-export type Id = string;
-
 export type User = {
-  id: Id;
+  id: string;
   name: string;
-  avatarUrl?: string;
+  avatarUrl: string;
 };
 
-export type BaseMessage = {
-  id: Id;
-  chatId: Id;
-  userId: Id;
-  createdAt: string; // ISO
-};
-
-export type TextMessage = BaseMessage & {
+export type TextMessage = {
+  id: string;
   kind: 'text';
+  chatId: string;
+  userId: string;
   text: string;
+  createdAt: string;
+  reaction?: '❤️' | null; // 추가: 하트 반응
 };
 
-export type Message = TextMessage; // (이미지/파일 등 생기면 합집합으로 확장)
-
-export type Conversation = {
-  id: Id;
-  title: string;
-  memberCount?: number;
-  /** 참가자 아이디 목록 (Profile.tsx에서 사용) */
-  participantIds?: Id[];
+export type ChatListItem = {
+  id: string;
+  name: string;
+  lastMessage: string;
+  time: string;
+  unreadCount: number;
+  avatarUrl: string;
+  type: 'friend' | 'business';
 };

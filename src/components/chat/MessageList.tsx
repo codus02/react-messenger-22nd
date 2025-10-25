@@ -7,36 +7,37 @@ type Props = {
   messages: TextMessage[];
   usersById: Record<string, User>;
   meId: string;
+  onToggleReaction: (messageId: string) => void;
 };
 
 function ymd(iso: string) {
   return iso.slice(0, 10);
 }
+
 function hm(iso: string) {
   const d = new Date(iso);
   const hh = String(d.getHours()).padStart(2, '0');
   const mm = String(d.getMinutes()).padStart(2, '0');
   return `${hh}:${mm}`;
 }
+
 function minuteKey(iso: string) {
   const d = new Date(iso);
   return `${d.getFullYear()}-${d.getMonth()}-${d.getDate()}-${d.getHours()}:${d.getMinutes()}`;
 }
 
-export default function MessageList({ messages, usersById, meId }: Props) {
+export default function MessageList({ messages, usersById, meId, onToggleReaction }: Props) {
   const endRef = useRef<HTMLDivElement>(null);
 
   const sections = useMemo(() => {
     const byDay = new Map<string, TextMessage[]>();
 
-    // 기존 메시지들만 그룹화 (빈 섹션 추가 안 함)
     for (const m of messages) {
       const k = ymd(m.createdAt);
       if (!byDay.has(k)) byDay.set(k, []);
       byDay.get(k)!.push(m);
     }
 
-    // 정렬
     for (const [, list] of byDay) {
       list.sort((a, b) => +new Date(a.createdAt) - +new Date(b.createdAt));
     }
@@ -55,8 +56,7 @@ export default function MessageList({ messages, usersById, meId }: Props) {
 
         return (
           <section key={day} className="flex flex-col">
-            {/* 날짜 표시 */}
-            <div className={`mb-4 flex justify-center ${isFirstSection ? '' : 'mt-7'}`}>
+            <div className={`mb-4 flex justify-center ${isFirstSection ? '' : 'mt-6'}`}>
               <span className="text-caption-medium grid h-[21px] w-[144px] place-items-center rounded-full bg-[var(--gray-500)] text-[color:var(--white)]">
                 {new Date(day).toLocaleDateString('ko-KR', {
                   year: 'numeric',
@@ -67,7 +67,6 @@ export default function MessageList({ messages, usersById, meId }: Props) {
               </span>
             </div>
 
-            {/* 메시지 목록 */}
             {list.map((m, idx) => {
               if (!m.text) return null;
 
@@ -79,12 +78,15 @@ export default function MessageList({ messages, usersById, meId }: Props) {
               const showTime = !next || minuteKey(next.createdAt) !== minuteKey(m.createdAt);
               const user = usersById[m.userId];
 
+              // 간격 계산: 이전 메시지에 하트가 있으면 first 처럼 취급
               let spacing: 'first' | 'different-user' | 'same-user';
               if (!prev || !prev.text) {
                 spacing = 'first';
               } else if (prev.userId !== m.userId) {
+                // 다른 사용자의 메시지
                 spacing = 'different-user';
               } else {
+                // 같은 사용자의 메시지
                 spacing = 'same-user';
               }
 
@@ -97,6 +99,7 @@ export default function MessageList({ messages, usersById, meId }: Props) {
                   showAvatar={showAvatar}
                   time={showTime ? hm(m.createdAt) : undefined}
                   spacing={spacing}
+                  onToggleReaction={onToggleReaction}
                 />
               );
             })}
