@@ -14,8 +14,8 @@ export default function Header({ activeTab, setActiveTab }: Props) {
 
       {/* 오른쪽: 아이콘들 + 탭 */}
       <div className="flex items-center gap-4">
-        <Icon name="chat" className="h-6 w-6" />
         <Icon name="image" className="h-6 w-6" />
+        <Icon name="chat" className="h-6 w-6" />
 
         {/* 탭 컨테이너 */}
         <div className="flex items-center gap-0 rounded-full bg-[var(--green-300)] p-1">
